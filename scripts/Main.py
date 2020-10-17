@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: latin-1 -*-
 
-#import rospy
+import rospy
 import time
 import math
 import logging
-#from std_msgs.msg import Int16
-#from std_msgs.msg import String
-#from std_msgs.msg import Bool
-#from geometry_msgs.msg import Pose2D
-#from Trajectory.py import Point,main_trajectory
+from std_msgs.msg import Int16
+from std_msgs.msg import String
+from std_msgs.msg import Bool
+from geometry_msgs.msg import Pose2D
+from Trajectory.py import Point,main_trajectory
 
 
 class Tools:
@@ -33,24 +33,24 @@ class Tools:
                 #TODO: conversion des angles
                 self.dPointdictionnary[i][4] = self.dPointdictionnary[i][4] + math.pi
         else:
-            print("you chose the blue side")
+            self.log.info("you chose the blue side")
 
     def Logs(self, loglevel):
         self.log.basicConfig(filename='main.log', format='%(asctime)s %(levelname)s:%(message)s', level=loglevel)
         self.log.basicConfig(format='%(levelname)s:%(message)s', level=loglevel)
         self.log.critical('============================ New Try ============================')
 
-    '''def Publish(self):
+    def Publish(self):
         self.publish_order_Arduino = rospy.Publisher('arduinoOrder', Int16, queue_size=10)
         self.publish_goal_point = rospy.Publisher('goal_point', Pose2D,queue_size=10)
 
     def Subscription(self):
         rospy.Subscriber('/arduinoState', Int16, self.Subscrib_Arduino_State)
         rospy.Subscriber('Code_Aruco', String, self.Subscrib_Code_Aruco)
-        rospy.Subscriber('Arrive', BOOL, self.Subscrib_Arrive)
-        rospy.Subscriber('StateClef', BOOL, self.bStateClef)
-        rospy.Subscriber('StateCote', BOOL, self.bStateCote)
-        rospy.Subscriber('StateTirette', BOOL, self.bStateTirette)
+        rospy.Subscriber('Arrive', Bool, self.Subscrib_Arrive)
+        rospy.Subscriber('StateClef', Bool, self.bStateClef) # 1 = Debug, 0 = Normal
+        rospy.Subscriber('StateCote', Bool, self.bStateCote) # 1 = Jaune, 0 = Bleu
+        rospy.Subscriber('StateTirette', Bool, self.bStateTirette) # 1 = Absente, 0 = Presente
 
     def Subscrib_Arduino_State(self, data):
         self.Arduino_State = data
@@ -59,10 +59,9 @@ class Tools:
         self.Code_Aruco = data
     
     def Subscrib_Arrive(self, data):
-        self.Arrive = data'''
+        self.bArrive = data
 
     def Road_Creation(self):
-
         self.dPointdictionnary["Point0"] = ("Point0", 0, 0, 0)
         self.dPointdictionnary["Point1"] = ("Point1", 0, 0, 0)
         self.dPointdictionnary["Point2"] = ("Point2", 0, 0, 0)
@@ -112,15 +111,16 @@ class Tools:
                           )
 
 def main():
-    '''SUBSCRIPTION'''
-    # tools.Subscription()
 
     '''SETUP'''
     tools = Tools()
     tools.Logs(logging.INFO)
-    #tools.Switch_Side(bBool)
+
+    '''SUBSCRIPTION'''
+    tools.Subscription()
 
     '''PROGRAM'''
+    tools.Switch_Side(tools.bStateCote)
     tools.Road_Creation()
 
     '''PUBLISH'''
