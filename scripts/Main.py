@@ -184,7 +184,7 @@ def main():
     log = logging
     Logs(log, log.DEBUG)
     tools = Tools()
-    tools.Logs(logging.INFO)
+    tools.Logs(logging.DEBUG)
     tools.Arduino_Order = 8
     for i in range(1, 10):
         tools.Publish()
@@ -226,8 +226,9 @@ def main():
             tools.Publish()
         log.info('PUBLISH * 10')
 
-        Current_Time = Start_Time.now()
-        #print('Current_Time = %0.f', Current_Time)
+        Current_Time = Time.now()
+        print('Current_Time = ', Current_Time)
+        print('Duration = ', Current_Time - Start_Time)
         log.info('Time Comparaison : %s', str(Current_Time))
         if Current_Time - Start_Time >= 95:
             tools.Stop = True
