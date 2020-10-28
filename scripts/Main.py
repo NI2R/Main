@@ -35,7 +35,7 @@ class Point(Coordonnees):
 
 class Tools:
     def __init__(self):
-        self.nPoint = 20
+        self.nPoint = 1
         self.nbActual_Point = 0
         self.dPointdictionnary = {}
         self.log = logging
@@ -73,7 +73,7 @@ class Tools:
             self.log.info("you chose the blue side")
 
     def Next_Point(self):
-        if self.nbActual_Point < self.nPoint:
+        if self.nbActual_Point <= self.nPoint:
             self.nbActual_Point += 1
             self.log.info('le point actuel est %s', str(self.nbActual_Point))
         else:
@@ -122,7 +122,7 @@ class Tools:
 
     def Road_Creation(self):
         self.dPointdictionnary["Point0"] = Point("Point0", 0, 0, 0)
-        self.dPointdictionnary["Point1"] = Point("Point1", 500, 0, 0)
+        self.dPointdictionnary["Point1"] = Point("Homologation", 500, 0, 0)
         self.dPointdictionnary["Point2"] = Point("Point2", 0, 0, 0)
         self.dPointdictionnary["Point3"] = Point("Point3", 0, 0, 0)
         self.dPointdictionnary["Point4"] = Point("Point4", 0, 0, 0)
@@ -184,7 +184,8 @@ def main():
     tools.Logs(logging.INFO)
     tools.Arduino_Order = 8
     tools.Publish()
-    log.info('Fin du SETUP' )
+    print('=============================Fin du SETUP=============================')
+    #log.info('Fin du SETUP' )
 
     ''' WAITING LOOP '''
     while not(tools.bStateTirette):
@@ -193,14 +194,16 @@ def main():
         rospy.sleep(0.5)
     ''' WAITING LOOP END '''
 
-    log.info('tirette arrachee')
+    print('tirette arrachee')
+    #log.info('tirette arrachee')
     tools.Switch_Side(tools.bStateCote)
     tools.Arduino_Order = 0
     ''' == SETUP END == '''
 
     ''' == PROGRAM LOOP == '''
     while not(rospy.is_shutdown()):
-        log.info('Inside PROGRAM LOOP')
+        print('Inside PROGRAM LOOP')
+        #log.info('Inside PROGRAM LOOP')
 
         '''SUBSCRIPTION'''
         tools.Subscription()
@@ -208,6 +211,7 @@ def main():
         '''PROGRAM'''
 
         tools.Road_Creation()
+
         tools.Next_Point()
 
         '''PUBLISH'''
