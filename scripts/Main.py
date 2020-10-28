@@ -104,11 +104,11 @@ class Tools:
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Code_Aruco), 'Code_Aruco')
         rospy.Subscriber('Arrive', Bool, self.Subscrib_Arrive)
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Arrive), 'Arrive')
-        rospy.Subscriber('StateClef', Bool, self.bStateClef) # 1 = Debug, 0 = Normal
+        rospy.Subscriber('StateClef', Bool, self.Subscrib_State_Clef) # 1 = Debug, 0 = Normal
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateClef), 'StateClef')
-        rospy.Subscriber('StateCote', Bool, self.bStateCote) # 1 = Jaune, 0 = Bleu
+        rospy.Subscriber('StateCote', Bool, self.Subscrib_State_Cote) # 1 = Jaune, 0 = Bleu
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateCote), 'StateCote')
-        rospy.Subscriber('StateTirette', Bool, self.bStateTirette) # 1 = Absente, 0 = Presente
+        rospy.Subscriber('StateTirette', Bool, self.Subscrib_State_Tirette) # 1 = Absente, 0 = Presente
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateTirette), 'StateTirette')
 
     def Subscrib_Arduino_State(self, data):
@@ -119,6 +119,15 @@ class Tools:
 
     def Subscrib_Arrive(self, data):
         self.bArrive = data
+
+    def Subscrib_State_Clef(self, data):
+        self.bStateClef = data
+
+    def Subscrib_State_Cote(self, data):
+        self.bStateCote = data
+
+    def Subscrib_State_Tirette(self, data):
+        self.bStateTirette = data
 
     def Road_Creation(self):
         self.dPointdictionnary["Point0"] = Point("Point0", 0, 0, 0)
@@ -179,7 +188,7 @@ def main():
     ''' == SETUP == '''
 
     log = logging
-    Logs(log, log.INFO)
+    Logs(log, log.DEBUG)
     tools = Tools()
     tools.Logs(logging.INFO)
     tools.Arduino_Order = 8
@@ -187,13 +196,13 @@ def main():
         tools.Publish()
 
     print('=============================Fin du SETUP=============================')
-    #log.info('Fin du SETUP' )
+    log.info('Fin du SETUP' )
 
     ''' WAITING LOOP '''
     while not(tools.bStateTirette):
         tools.Subscription()
         print('En attente de la tirette %s', str(tools.bStateTirette))
-        #log.info('En attente de la tirette %s', str(tools.bStateTirette))
+        log.info('En attente de la tirette %s', str(tools.bStateTirette))
         rospy.sleep(0.5)
     ''' WAITING LOOP END '''
 
