@@ -177,7 +177,7 @@ def Logs(log, loglevel):
 def main():
 
     ''' == SETUP == '''
-    Start_Time = rospy.Time()
+
     log = logging
     Logs(log, log.INFO)
     tools = Tools()
@@ -199,6 +199,7 @@ def main():
 
     print('tirette arrachee')
     #log.info('tirette arrachee')
+    Start_Time = rospy.Time()
     tools.Switch_Side(tools.bStateCote)
     tools.Arduino_Order = 0
     ''' == SETUP END == '''
@@ -211,10 +212,9 @@ def main():
         '''SUBSCRIPTION'''
         tools.Subscription()
         log.info('SUBSCRIPTION')
+
         '''PROGRAM'''
-
         tools.Road_Creation()
-
         tools.Next_Point()
 
         '''PUBLISH'''
@@ -222,8 +222,9 @@ def main():
         log.info('PUBLISH')
 
         Current_Time = Start_Time.now()
+        print('Current_Time = %0.f', Current_Time)
         log.info('Time Comparaison : %s', str(Current_Time))
-        if Current_Time >= 90:
+        if Current_Time >= 95:
             tools.Stop = True
             tools.Reset()
             tools.Arduino_Order = 8
