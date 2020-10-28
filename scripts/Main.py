@@ -202,7 +202,8 @@ def main():
 
     print('tirette arrachee')
     #log.info('tirette arrachee')
-    Start_Time = rospy.Time()
+    Time = rospy.Time()
+    Start_Time = Time.now()
     tools.Switch_Side(tools.bStateCote)
     tools.Arduino_Order = 0
     ''' == SETUP END == '''
@@ -226,9 +227,9 @@ def main():
         log.info('PUBLISH * 10')
 
         Current_Time = Start_Time.now()
-        print('Current_Time = %0.f', Current_Time)
+        #print('Current_Time = %0.f', Current_Time)
         log.info('Time Comparaison : %s', str(Current_Time))
-        if Current_Time >= 95:
+        if Current_Time - Start_Time >= 95:
             tools.Stop = True
             tools.Reset()
             tools.Arduino_Order = 8
