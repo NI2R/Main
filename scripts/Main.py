@@ -16,12 +16,16 @@ class Coordonnees:
         self.x = x
         self.y = y
         self.theta = theta
+        self.Pose2D = Pose2D()
+
 
     def Get_Coordonnes(self, point):
+        self.Pose2D.x = point.x
+        self.Pose2D.y = point.y
+        self.Pose2D.theta = point.theta
         self.x = point.x
         self.y = point.y
         self.theta = point.theta
-
 
 class Point(Coordonnees):
     def __init__(self, name, x, y, theta):
@@ -40,7 +44,10 @@ class Tools:
         self.Arduino_Order = 0
         self.Arduino_State = 0
         self.Coordonnees = Coordonnees
-        self.cgoal = self.Coordonnees(x=0, y=0, theta=0)
+        self.cgoal = Coordonnees(x=0, y=0, theta=0)
+        self.cgoal.x = 0
+        self.cgoal.y = 0
+        self.cgoal.theta = 0
         self.bArrive = False
         self.bStateClef = False
         self.bStateCote = False
@@ -51,6 +58,9 @@ class Tools:
         self.cgoal.x = 0
         self.cgoal.y = 0
         self.cgoal.theta = 0
+        self.cgoal.Pose2D.x = 0
+        self.cgoal.Pose2D.y = 0
+        self.cgoal.Pose2D.theta = 0
 
     def Switch_Side(self, bBool):
         if bBool:
@@ -80,8 +90,8 @@ class Tools:
         self.publish_order_Arduino.publish(self.Arduino_Order)
         self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.Arduino_Order), 'arduinoOrder')
         self.publish_goal_point = rospy.Publisher('goal_point', Pose2D, queue_size=10)
-        self.publish_goal_point.publish(self.cgoal)
-        self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.cgoal), 'goal_point')
+        self.publish_goal_point.publish(self.cgoal.Pose2D)
+        self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.cgoal.Pose2D), 'goal_point')
         self.publish_stop = rospy.Publisher('Stop_time', Bool, queue_size=10)
         self.publish_stop.publish(self.Stop)
         self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.Stop), 'Stop')
