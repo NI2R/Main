@@ -66,7 +66,7 @@ class Tools:
             self.log.info("you chose the blue side")
 
     def Next_Point(self):
-        if self.nbActual_Point <= self.nPoint:
+        if self.nbActual_Point < self.nPoint:
             self.nbActual_Point += 1
             self.log.info('le point actuel est %s', str(self.nbActual_Point))
         else:
