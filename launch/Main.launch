@@ -4,5 +4,8 @@ Copyright (c) 2020, NI2R.
 <launch>
     <node name="Main" pkg="Main" type="Main.py" output="screen" />
 
+    <include file="$(find arduinoProg)/launch/test_interface.launch" />
+    <include file="$(find Deplacement)/launch/Deplacement.launch" />
+    <node name="Odrive" pkg="odrv_ros" type="interfaceROS.py" output="screen" />
 
 </launch>
