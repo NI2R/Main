@@ -112,10 +112,10 @@ class Tools:
 
     def Road_Creation(self):
         self.dPointdictionnary["Point0"] = Point("Point0", 0, 0, 0)
-        self.dPointdictionnary["Point1"] = Point("Point1", 1, 0, 0)
-        self.dPointdictionnary["Point2"] = Point("Point2", 2, 0, 0)
-        self.dPointdictionnary["Point3"] = Point("Point3", 3, 0, 0)
-        self.dPointdictionnary["Point4"] = Point("Point4", 4, 0, 0)
+        self.dPointdictionnary["Point1"] = Point("Point1", 500, 0, 0)
+        self.dPointdictionnary["Point2"] = Point("Point2", 0, 0, 0)
+        self.dPointdictionnary["Point3"] = Point("Point3", 0, 0, 0)
+        self.dPointdictionnary["Point4"] = Point("Point4", 0, 0, 0)
         self.dPointdictionnary["Point5"] = Point("Point5", 0, 0, 0)
         self.dPointdictionnary["Point6"] = Point("Point6", 0, 0, 0)
         self.dPointdictionnary["Point7"] = Point("Point7", 0, 0, 0)
@@ -144,12 +144,12 @@ class Tools:
             self.dPointdictionnary["Point20"] = Point("Point20", 0, 0, 0)
         else:
             self.log.error('Le Code_Aruco n a pas ete identifie, sa valeur = %s', self.Code_Aruco)
-            self.dPointdictionnary["Point15"] = Point("Point15", 15, 0, 0)
+            self.dPointdictionnary["Point15"] = Point("Point15", 0, 0, 0)
             self.dPointdictionnary["Point16"] = Point("Point16", 0, 0, 0)
             self.dPointdictionnary["Point17"] = Point("Point17", 0, 0, 0)
             self.dPointdictionnary["Point18"] = Point("Point18", 0, 0, 0)
             self.dPointdictionnary["Point19"] = Point("Point19", 0, 0, 0)
-            self.dPointdictionnary["Point20"] = Point("Point20", 20, 0, 0)
+            self.dPointdictionnary["Point20"] = Point("Point20", 0, 0, 0)
 
         for i in range(0, self.nPoint + 1):
             self.log.debug('le point %s a ete ajoute au dictionnaire : x = %s, y = %s, theta = %s',
@@ -172,6 +172,7 @@ def main():
     Logs(log, log.WARNING)
     tools = Tools()
     tools.Logs(logging.INFO)
+    tools.Publish()
 
     ''' WAITING LOOP '''
     while not(tools.bStateTirette):
