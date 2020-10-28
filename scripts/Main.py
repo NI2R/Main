@@ -73,6 +73,9 @@ class Tools:
         else:
             self.log.error('le point actuel est %s et souhaite etre incrementé', str(self.nbActual_Point))
         self.cgoal.Get_Coordonnes(self.dPointdictionnary["Point"+str(self.nbActual_Point)])
+        print('Pose2D.x =', self.cgoal.Pose2D.x)
+        print('Pose2D.y =', self.cgoal.Pose2D.y)
+        print('Pose2D.theta =', self.cgoal.Pose2D.theta)
 
     def Logs(self, loglevel):
         self.log.basicConfig(filename='main.log', format='%(asctime)s %(levelname)s:%(message)s', level=loglevel)
