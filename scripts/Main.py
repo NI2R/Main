@@ -124,9 +124,9 @@ class Tools:
         self.bStateTirette = data
 
     def Road_Creation(self):
-        self.dPointdictionnary["Point0"] = Point("Point0", 0, 0, 0)
+        self.dPointdictionnary["Point0"] = Point("Point0", 1, 1, 1)
         self.dPointdictionnary["Point1"] = Point("Homologation", 1000, 0, 0)
-        self.dPointdictionnary["Point2"] = Point("Point2", 0, 0, 0)
+        self.dPointdictionnary["Point2"] = Point("Point2", 3, 3, 3)
         self.dPointdictionnary["Point3"] = Point("Point3", 0, 0, 0)
         self.dPointdictionnary["Point4"] = Point("Point4", 0, 0, 0)
         self.dPointdictionnary["Point5"] = Point("Point5", 0, 0, 0)
@@ -233,7 +233,8 @@ def main():
             tools.Stop = True
             tools.Reset()
             tools.Arduino_Order = 8
-            tools.Publish()
+            for i in range(1, 10):
+                tools.Publish()
             break
 
     ''' == LOOP-END == '''
