@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: latin-1 -*-
 
-#import rospy
+import rospy
 import time
 import math
 import logging
-#from std_msgs.msg import Int16
-#from std_msgs.msg import String
-#from std_msgs.msg import Bool
-#from geometry_msgs.msg import Pose2D
+from std_msgs.msg import Int16
+from std_msgs.msg import String
+from std_msgs.msg import Bool
+from geometry_msgs.msg import Pose2D
 
 
 class Coordonnees:
@@ -45,6 +45,12 @@ class Tools:
         self.bStateClef = False
         self.bStateCote = False
         self.bStateTirette = False
+        self.Stop = False
+
+    def Reset(self):
+        self.cgoal.x = 0
+        self.cgoal.y = 0
+        self.cgoal.theta = 0
 
     def Switch_Side(self, bBool):
         if bBool:
@@ -69,37 +75,40 @@ class Tools:
         self.log.basicConfig(format='%(levelname)s:%(message)s', level=loglevel)
         self.log.critical('============================ New Try ============================')
 
-    #def Publish(self):
-    #    self.publish_order_Arduino = rospy.Publisher('arduinoOrder', Int16, queue_size=10)
-    #    self.publish_order_Arduino.publish(self.Arduino_Order)
-    #    self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.Arduino_Order), 'arduinoOrder')
-    #    self.publish_goal_point = rospy.Publisher('goal_point', Pose2D, queue_size=10)
-    #    self.publish_goal_point.publish(self.goal)
-    #    self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.goal), 'goal_point')
-#
-#
-    #def Subscription(self):
-    #    rospy.Subscriber('/arduinoState', Int16, self.Subscrib_Arduino_State)
-    #    self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Arduino_State), '/arduinoState')
-    #    rospy.Subscriber('Code_Aruco', String, self.Subscrib_Code_Aruco)
-    #    self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Code_Aruco), 'Code_Aruco')
-    #    rospy.Subscriber('Arrive', Bool, self.Subscrib_Arrive)
-    #    self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Arrive), 'Arrive')
-    #    rospy.Subscriber('StateClef', Bool, self.bStateClef) # 1 = Debug, 0 = Normal
-    #    self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateClef), 'StateClef')
-    #    rospy.Subscriber('StateCote', Bool, self.bStateCote) # 1 = Jaune, 0 = Bleu
-    #    self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateCote), 'StateCote')
-    #    rospy.Subscriber('StateTirette', Bool, self.bStateTirette) # 1 = Absente, 0 = Presente
-    #    self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateTirette), 'StateTirette')
-#
-    #def Subscrib_Arduino_State(self, data):
-    #    self.Arduino_State = data
-#
-    #def Subscrib_Code_Aruco(self, data):
-    #    self.Code_Aruco = data
-    #
-    #def Subscrib_Arrive(self, data):
-    #    self.bArrive = data
+    def Publish(self):
+        self.publish_order_Arduino = rospy.Publisher('arduinoOrder', Int16, queue_size=10)  # 0=rien 1=init ... 8=Drapeau
+        self.publish_order_Arduino.publish(self.Arduino_Order)
+        self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.Arduino_Order), 'arduinoOrder')
+        self.publish_goal_point = rospy.Publisher('goal_point', Pose2D, queue_size=10)
+        self.publish_goal_point.publish(self.cgoal)
+        self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.cgoal), 'goal_point')
+        self.publish_stop = rospy.Publisher('Stop_time', Bool, queue_size=10)
+        self.publish_stop.publish(self.Stop)
+        self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.Stop), 'Stop')
+
+
+    def Subscription(self):
+        rospy.Subscriber('/arduinoState', Int16, self.Subscrib_Arduino_State)
+        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Arduino_State), '/arduinoState')
+        rospy.Subscriber('CodeAruco', String, self.Subscrib_Code_Aruco)
+        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Code_Aruco), 'Code_Aruco')
+        rospy.Subscriber('Arrive', Bool, self.Subscrib_Arrive)
+        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Arrive), 'Arrive')
+        rospy.Subscriber('StateClef', Bool, self.bStateClef) # 1 = Debug, 0 = Normal
+        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateClef), 'StateClef')
+        rospy.Subscriber('StateCote', Bool, self.bStateCote) # 1 = Jaune, 0 = Bleu
+        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateCote), 'StateCote')
+        rospy.Subscriber('StateTirette', Bool, self.bStateTirette) # 1 = Absente, 0 = Presente
+        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateTirette), 'StateTirette')
+
+    def Subscrib_Arduino_State(self, data):
+        self.Arduino_State = data
+
+    def Subscrib_Code_Aruco(self, data):
+        self.Code_Aruco = data
+
+    def Subscrib_Arrive(self, data):
+        self.bArrive = data
 
     def Road_Creation(self):
         self.dPointdictionnary["Point0"] = Point("Point0", 0, 0, 0)
@@ -150,36 +159,63 @@ class Tools:
                           str(self.dPointdictionnary["Point"+str(i)].theta)
                           )
 
+def Logs(log, loglevel):
+    log.basicConfig(filename='Super_main.log', format='%(asctime)s %(levelname)s:%(message)s', level=loglevel)
+    log.basicConfig(format='%(levelname)s:%(message)s', level=loglevel)
+    log.critical('============================ New Try ============================')
+
 def main():
 
-    '''SETUP'''
+    ''' == SETUP == '''
+    Start_Time = rospy.Time()
+    log = logging
+    Logs(log, log.WARNING)
     tools = Tools()
     tools.Logs(logging.INFO)
 
-    #'''SUBSCRIPTION'''
-    #tools.Subscription()
-#
-    '''PROGRAM'''
-    tools.Switch_Side(tools.bStateCote)
-    tools.Road_Creation()
+    ''' WAITING LOOP '''
+    while not(tools.bStateTirette):
+        tools.Subscription()
+        log.info('En attente de la tirette %s', str(tools.bStateTirette))
+        rospy.sleep(0.5)
+    ''' WAITING LOOP END '''
 
-    for i in range(0, tools.nPoint+1):
-        print(tools.cgoal.x)
+    tools.Switch_Side(tools.bStateCote)
+
+    ''' == SETUP END == '''
+
+    ''' == PROGRAM LOOP == '''
+    while not(rospy.is_shutdown()):
+
+        '''SUBSCRIPTION'''
+        tools.Subscription()
+        log.info('Subscription')
+        '''PROGRAM'''
+
+        tools.Road_Creation()
         tools.Next_Point()
 
-    #'''PUBLISH'''
-    #while not(rospy.is_shutdown()):
-#
-    #    tools.Publish()
-    time.sleep(2)
+        '''PUBLISH'''
+        tools.Publish()
+        log.info('Publish')
+
+        Current_Time = Start_Time.now()
+        if Current_Time >= 90:
+            tools.Stop = True
+            tools.Reset()
+            tools.Arduino_Order = 8
+            tools.Publish()
+            break
+
+    ''' == LOOP-END == '''
 
 
 if __name__ == '__main__':
-    #try:
-    #    rospy.init_node('Main', anonymous=True)
-    #    rospy.Rate(1)
-    #    main()
-    #    rospy.spin()
-    #except rospy.ROSInterruptException:
-    #    pass
-    main()
+    try:
+        rospy.init_node('Main', anonymous=True)
+        rospy.Rate(1)
+        main()
+        rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
+
