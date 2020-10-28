@@ -59,10 +59,9 @@ class Tools:
     def Switch_Side(self, bBool):
         if bBool:
             self.log.info("you chose the yellow side")
-            for i in range(0, self.nPoint):
-                self.dPointdictionnary[i][3] = - self.dPointdictionnary[i][3]
-                #TODO: conversion des angles
-                self.dPointdictionnary[i][4] = self.dPointdictionnary[i][4] + math.pi
+            #for i in range(0, self.nPoint):
+            #TODO: conversion des angles
+
         else:
             self.log.info("you chose the blue side")
 
