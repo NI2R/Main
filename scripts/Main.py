@@ -11,13 +11,13 @@ from std_msgs.msg import Bool
 from geometry_msgs.msg import Pose2D
 
 
-class Coordonnees:
-    def __init__(self, x, y, theta):
+class Point:
+    def __init__(self, name, x, y, theta):
+        self.name = name
         self.x = x
         self.y = y
         self.theta = theta
         self.Pose2D = Pose2D()
-
 
     def Get_Coordonnes(self, point):
         self.Pose2D.x = point.x
@@ -26,11 +26,6 @@ class Coordonnees:
         self.x = point.x
         self.y = point.y
         self.theta = point.theta
-
-class Point(Coordonnees):
-    def __init__(self, name, x, y, theta):
-        super(Point, self).__init__(x, y, theta)
-        self.name = name
 
 
 class Tools:
@@ -43,8 +38,7 @@ class Tools:
         self.Code_Aruco = 'None'
         self.Arduino_Order = 0
         self.Arduino_State = 0
-        self.Coordonnees = Coordonnees
-        self.cgoal = Coordonnees(x=0, y=0, theta=0)
+        self.cgoal = Point(name='goal', x=0, y=0, theta=0)
         self.cgoal.x = 0
         self.cgoal.y = 0
         self.cgoal.theta = 0
@@ -227,8 +221,9 @@ def main():
         tools.Next_Point()
 
         '''PUBLISH'''
-        tools.Publish()
-        log.info('PUBLISH')
+        for i in range(1, 10):
+            tools.Publish()
+        log.info('PUBLISH * 10')
 
         Current_Time = Start_Time.now()
         print('Current_Time = %0.f', Current_Time)
