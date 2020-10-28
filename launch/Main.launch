@@ -12,6 +12,10 @@ Copyright (c) 2020, NI2R.
         <param name="port" value="/dev/ttyACM1" />
         <param name="baud" value="57600" />
 	</node>
+    <node pkg="rosserial_python" type="serial_node.py" name="serial_nodeACM2">
+        <param name="port" value="/dev/ttyACM2" />
+        <param name="baud" value="57600" />
+	</node>
     <include file="$(find Deplacement)/launch/Deplacement.launch" />
     <node name="Odrive" pkg="odrv_ros" type="interfaceROS.py" output="screen" />
 
