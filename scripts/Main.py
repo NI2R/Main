@@ -179,10 +179,12 @@ def main():
     ''' == SETUP == '''
     Start_Time = rospy.Time()
     log = logging
-    Logs(log, log.WARNING)
+    Logs(log, log.INFO)
     tools = Tools()
     tools.Logs(logging.INFO)
+    tools.Arduino_Order = 8
     tools.Publish()
+    log.info('Fin du SETUP' )
 
     ''' WAITING LOOP '''
     while not(tools.bStateTirette):
@@ -191,16 +193,18 @@ def main():
         rospy.sleep(0.5)
     ''' WAITING LOOP END '''
 
+    log.info('tirette arrachee')
     tools.Switch_Side(tools.bStateCote)
-
+    tools.Arduino_Order = 0
     ''' == SETUP END == '''
 
     ''' == PROGRAM LOOP == '''
     while not(rospy.is_shutdown()):
+        log.info('Inside PROGRAM LOOP')
 
         '''SUBSCRIPTION'''
         tools.Subscription()
-        log.info('Subscription')
+        log.info('SUBSCRIPTION')
         '''PROGRAM'''
 
         tools.Road_Creation()
@@ -208,9 +212,10 @@ def main():
 
         '''PUBLISH'''
         tools.Publish()
-        log.info('Publish')
+        log.info('PUBLISH')
 
         Current_Time = Start_Time.now()
+        log.info('Time Comparaison : %s', str(Current_Time))
         if Current_Time >= 90:
             tools.Stop = True
             tools.Reset()
