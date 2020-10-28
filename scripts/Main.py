@@ -183,14 +183,17 @@ def main():
     tools = Tools()
     tools.Logs(logging.INFO)
     tools.Arduino_Order = 8
-    tools.Publish()
+    for i in range(1, 10):
+        tools.Publish()
+
     print('=============================Fin du SETUP=============================')
     #log.info('Fin du SETUP' )
 
     ''' WAITING LOOP '''
     while not(tools.bStateTirette):
         tools.Subscription()
-        log.info('En attente de la tirette %s', str(tools.bStateTirette))
+        print('En attente de la tirette %s', str(tools.bStateTirette))
+        #log.info('En attente de la tirette %s', str(tools.bStateTirette))
         rospy.sleep(0.5)
     ''' WAITING LOOP END '''
 
