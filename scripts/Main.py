@@ -188,6 +188,7 @@ def main():
     tools = Tools()
     tools.Logs(logging.DEBUG)
     tools.Arduino_Order = 1
+    rospy.sleep(20)
     for i in range(1, 10):
         tools.Publish()
 
