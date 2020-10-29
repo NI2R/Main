@@ -106,19 +106,19 @@ class Tools:
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateTirette), 'StateTirette')
 
     def Subscrib_Arduino_State(self, data):
-        self.Arduino_State = data
+        self.Arduino_State = data.data
 
     def Subscrib_Code_Aruco(self, data):
-        self.Code_Aruco = data
+        self.Code_Aruco = data.data
 
     def Subscrib_Arrive(self, data):
-        self.bArrive = data
+        self.bArrive = data.data
 
     def Subscrib_State_Clef(self, data):
-        self.bStateClef = data
+        self.bStateClef = data.data
 
     def Subscrib_State_Cote(self, data):
-        self.bStateCote = data
+        self.bStateCote = data.data
 
     def Subscrib_State_Tirette(self, data):
         self.bStateTirette = data.data
@@ -128,7 +128,7 @@ class Tools:
 
     def Road_Creation(self):
         self.dPointdictionnary["Point0"] = Point("Point0", 1, 1, 1)
-        self.dPointdictionnary["Point1"] = Point("Homologation", 1000, 0, 0)
+        self.dPointdictionnary["Point1"] = Point("Homologation", 100000, 0, 0)
         self.dPointdictionnary["Point2"] = Point("Point2", 3, 3, 3)
         self.dPointdictionnary["Point3"] = Point("Point3", 0, 0, 0)
         self.dPointdictionnary["Point4"] = Point("Point4", 0, 0, 0)
@@ -189,7 +189,6 @@ def main():
     tools = Tools()
     tools.Logs(logging.DEBUG)
     #tools.Arduino_Order = 1
-    time.sleep(20)
     tools.Subscription()
     print('=============================Fin du SETUP=============================')
     log.info('Fin du SETUP' )
