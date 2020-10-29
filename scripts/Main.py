@@ -223,6 +223,7 @@ def main():
             tools.bPosition_Atteinte = False
             tools.Next_Point()
             tools.cgoal.Pose2D = Liste_Points[tools.nbActual_Point]
+            print('Main : tools.cgoal.Pose2D =', tools.cgoal.Pose2D)
             tools.bEnableCompute = True
             #inserer les actions ici + publish
 
@@ -230,6 +231,7 @@ def main():
             for i in range(0, 10):
                 tools.Publish()
             tools.bEnableCompute = False
+            print('Main : Published')
             time.sleep(1)
 
     ''' == LOOP-END == '''
