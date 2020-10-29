@@ -72,7 +72,7 @@ class Tools:
             self.nbActual_Point += 1
             self.log.info('le point actuel est %s', str(self.nbActual_Point))
         else:
-            self.log.error('le point actuel est %s et souhaite etre incrementé', str(self.nbActual_Point))
+            self.log.error('le point actuel est %s et souhaite etre incrementï¿½', str(self.nbActual_Point))
         self.cgoal.Get_Coordonnes(self.dPointdictionnary["Point"+str(self.nbActual_Point)])
 
     def Logs(self, loglevel):
@@ -134,7 +134,7 @@ class Tools:
 
     def Road_Creation(self):
         self.dPointdictionnary["Point0"] = Point("Point0", 1, 1, 1)
-        self.dPointdictionnary["Point1"] = Point("Homologation", 100000, 0, 0)
+        self.dPointdictionnary["Point1"] = Point("Homologation", 1000, 0, 0)
         self.dPointdictionnary["Point2"] = Point("Point2", 3, 3, 3)
         self.dPointdictionnary["Point3"] = Point("Point3", 0, 0, 0)
         self.dPointdictionnary["Point4"] = Point("Point4", 0, 0, 0)
@@ -218,6 +218,8 @@ def main():
     log.info('SUBSCRIPTION')
 
     ''' == PROGRAM LOOP == '''
+    tools.Road_Creation()
+    tools.Next_Point()
     while not(rospy.is_shutdown()):
         log.info('Inside PROGRAM LOOP')
 
@@ -226,7 +228,6 @@ def main():
         #log.info('SUBSCRIPTION')
 
         '''PROGRAM'''
-        tools.Road_Creation()
         if tools.bPosition_Atteinte:
             tools.Next_Point()
 
