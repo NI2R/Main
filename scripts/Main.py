@@ -87,6 +87,9 @@ class Tools:
         self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.Arduino_Order), 'arduinoOrder')
         self.publish_goal_point = rospy.Publisher('goal_point', Pose2D, queue_size=10)
         self.publish_goal_point.publish(self.cgoal.Pose2D)
+        print('publication de cgoal.Pose2D.x =', self.cgoal.Pose2D.x)
+        print('publication de cgoal.Pose2D.y =', self.cgoal.Pose2D.y)
+        print('publication de cgoal.Pose2D.theta =', self.cgoal.Pose2D.theta)
         self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.cgoal.Pose2D), 'goal_point')
         self.publish_stop = rospy.Publisher('Stop_time', Bool, queue_size=10)
         self.publish_stop.publish(self.Stop)
@@ -198,12 +201,12 @@ def main():
     ''' WAITING LOOP '''
     while not(tools.bStateTirette):
         tools.Subscription()
-        print('En attente de la tirette %s', str(tools.bStateTirette))
-        log.info('En attente de la tirette %s', str(tools.bStateTirette))
+        print('En attente de la tirette : etat = %s', str(tools.bStateTirette))
+        log.info('En attente de la tirette : etat = %s', str(tools.bStateTirette))
         rospy.sleep(0.5)
     ''' WAITING LOOP END '''
 
-    print('tirette arrachee')
+    print('tirette Absente')
     #log.info('tirette arrachee')
     Start_Time = time.time()
     tools.Switch_Side(tools.bStateCote)
@@ -212,8 +215,7 @@ def main():
 
     ''' == PROGRAM LOOP == '''
     while not(rospy.is_shutdown()):
-        print('Inside PROGRAM LOOP')
-        #log.info('Inside PROGRAM LOOP')
+        log.info('Inside PROGRAM LOOP')
 
         '''SUBSCRIPTION'''
         tools.Subscription()
@@ -229,8 +231,6 @@ def main():
         log.info('PUBLISH * 10')
 
         Current_Time = time.time()
-        print('Current_Time = ', Current_Time)
-        print('Duration = ', Current_Time - Start_Time)
         log.info('Time Comparaison : %s', str(Current_Time))
         if Current_Time - Start_Time >= 95:
             tools.Stop = True
