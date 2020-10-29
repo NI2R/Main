@@ -42,6 +42,7 @@ class Tools:
         self.cgoal.x = 0
         self.cgoal.y = 0
         self.cgoal.theta = 0
+        self.Retain = False
         self.bArrive = False
         self.bStateClef = False
         self.bStateCote = False
@@ -220,6 +221,9 @@ def main():
 
         '''PROGRAM'''
         if tools.bPosition_Atteinte:
+            tools.Retain = tools.bPosition_Atteinte
+
+        if tools.Retain:
             tools.bPosition_Atteinte = False
             tools.Next_Point()
             tools.cgoal.Pose2D = Liste_Points[tools.nbActual_Point]
@@ -228,10 +232,10 @@ def main():
             #inserer les actions ici + publish
 
             '''PUBLISH'''
-            for i in range(0, 10):
+            for i in range(0, 30):
                 tools.Publish()
-                rospy.sleep(0.2)
             tools.bEnableCompute = False
+            tools.Retain = False
             print('Main : Published')
             time.sleep(1)
 
