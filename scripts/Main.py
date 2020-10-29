@@ -134,7 +134,7 @@ class Tools:
 
     def Road_Creation(self):
         self.dPointdictionnary["Point0"] = Point("Point0", 1, 1, 1)
-        self.dPointdictionnary["Point1"] = Point("Homologation", 1000, 0, 0)
+        self.dPointdictionnary["Point1"] = Point("Homologation", 545 + 130, 0, 0)
         self.dPointdictionnary["Point2"] = Point("Point2", 3, 3, 3)
         self.dPointdictionnary["Point3"] = Point("Point3", 0, 0, 0)
         self.dPointdictionnary["Point4"] = Point("Point4", 0, 0, 0)
