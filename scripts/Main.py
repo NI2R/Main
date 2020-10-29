@@ -91,8 +91,8 @@ class Tools:
         self.publish_stop.publish(self.Stop)
         self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.Stop), 'Stop')
 
-        self.publish_stop = rospy.Publisher('/odriveEnableCompute', Bool, queue_size=10)
-        self.publish_stop.publish(self.bEnableCompute)
+        self.publish_Enable_Compute = rospy.Publisher('/odriveEnableCompute', Bool, queue_size=10)
+        self.publish_Enable_Compute.publish(self.bEnableCompute)
         self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.bEnableCompute), '/odriveEnableCompute')
 
     def Subscription(self):
