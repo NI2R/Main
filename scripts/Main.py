@@ -133,9 +133,9 @@ class Tools:
 
 
     def Road_Creation(self):
-        self.dPointdictionnary["Point0"] = Point("Point0", 1, 1, 1)
+        self.dPointdictionnary["Point0"] = Point("Point0", 0, 0, 0)
         self.dPointdictionnary["Point1"] = Point("Homologation", 1000, 0, 0)
-        self.dPointdictionnary["Point2"] = Point("Point2", 3, 3, 3)
+        self.dPointdictionnary["Point2"] = Point("Point2", 1000, 0, 45)
         self.dPointdictionnary["Point3"] = Point("Point3", 0, 0, 0)
         self.dPointdictionnary["Point4"] = Point("Point4", 0, 0, 0)
         self.dPointdictionnary["Point5"] = Point("Point5", 0, 0, 0)
@@ -228,8 +228,9 @@ def main():
         #log.info('SUBSCRIPTION')
 
         '''PROGRAM'''
-        if tools.bArrive:
+        if tools.bPosition_Atteinte:
             tools.Next_Point()
+            #inserer les actions ici + publish
 
         '''PUBLISH'''
         tools.Publish()
