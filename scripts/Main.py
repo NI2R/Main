@@ -121,7 +121,7 @@ class Tools:
         self.bStateCote = data
 
     def Subscrib_State_Tirette(self, data):
-        self.bStateTirette = data
+        self.bStateTirette = data.data
 
 
 
