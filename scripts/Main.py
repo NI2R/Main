@@ -46,7 +46,7 @@ class Tools:
         self.bStateClef = False
         self.bStateCote = False
         self.bStateTirette = False
-        self.bListStateTirette = 10*[0]
+        self.bStateTiretteBuffer = True
         self.Stop = False
 
     def Reset(self):
@@ -121,11 +121,9 @@ class Tools:
         self.bStateCote = data
 
     def Subscrib_State_Tirette(self, data):
-        self.bStateTirette = data
-        #i = 0
-        #while self.bListStateTirette[i]:
-        #    if self.bListStateTirette[i] != True:
-        #        self.bListStateTirette[i] = data
+        self.bStateTiretteBuffer = data
+
+
 
 
     def Road_Creation(self):
@@ -192,12 +190,12 @@ def main():
     tools.Logs(logging.DEBUG)
     #tools.Arduino_Order = 1
     time.sleep(20)
+    tools.Subscription()
     print('=============================Fin du SETUP=============================')
     log.info('Fin du SETUP' )
 
     ''' WAITING LOOP '''
     while not(tools.bStateTirette):
-        tools.Subscription()
         print('En attente de la tirette : etat = %s', str(tools.bStateTirette))
         log.info('En attente de la tirette : etat = %s', str(tools.bStateTirette))
         rospy.sleep(0.5)
@@ -210,13 +208,17 @@ def main():
     tools.Arduino_Order = 0
     ''' == SETUP END == '''
 
+    '''SUBSCRIPTION'''
+    tools.Subscription()
+    log.info('SUBSCRIPTION')
+
     ''' == PROGRAM LOOP == '''
     while not(rospy.is_shutdown()):
         log.info('Inside PROGRAM LOOP')
 
-        '''SUBSCRIPTION'''
-        tools.Subscription()
-        log.info('SUBSCRIPTION')
+        #'''SUBSCRIPTION'''
+        #tools.Subscription()
+        #log.info('SUBSCRIPTION')
 
         '''PROGRAM'''
         tools.Road_Creation()
