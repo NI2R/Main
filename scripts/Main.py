@@ -30,7 +30,7 @@ class Point:
 
 class Tools:
     def __init__(self):
-        self.nPoint = 1
+        self.nPoint = 3
         self.nbActual_Point = 0
         self.dPointdictionnary = {}
         self.log = logging
@@ -136,7 +136,7 @@ class Tools:
         self.dPointdictionnary["Point0"] = Point("Point0", 0, 0, 0)
         self.dPointdictionnary["Point1"] = Point("Homologation", 1000, 0, 0)
         self.dPointdictionnary["Point2"] = Point("Point2", 1000, 0, 45)
-        self.dPointdictionnary["Point3"] = Point("Point3", 0, 0, 0)
+        self.dPointdictionnary["Point3"] = Point("Point3", 1500, 0, 45)
         self.dPointdictionnary["Point4"] = Point("Point4", 0, 0, 0)
         self.dPointdictionnary["Point5"] = Point("Point5", 0, 0, 0)
         self.dPointdictionnary["Point6"] = Point("Point6", 0, 0, 0)
