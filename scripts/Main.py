@@ -217,8 +217,8 @@ def main():
         tools.Next_Point()
 
         '''PUBLISH'''
-        for i in range(1, 50):
-            tools.Publish()
+        tools.Publish()
+        time.sleep(1)
         log.info('PUBLISH * 50')
 
         Current_Time = time.time()
