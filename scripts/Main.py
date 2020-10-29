@@ -187,6 +187,7 @@ def main():
     tools.Arduino_Order = 1
     for i in range(1, 10):
         tools.Publish()
+        rospy.sleep(0.1)
 
     print('=============================Fin du SETUP=============================')
     log.info('Fin du SETUP' )
@@ -229,7 +230,7 @@ def main():
             tools.Stop = True
             tools.Reset()
             tools.Arduino_Order = 8
-            for i in range(1, 10):
+            while not(rospy.is_shutdown()):
                 tools.Publish()
             break
 
