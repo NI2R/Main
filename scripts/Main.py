@@ -46,6 +46,7 @@ class Tools:
         self.bStateClef = False
         self.bStateCote = False
         self.bStateTirette = False
+        self.bListStateTirette = 10*[0]
         self.Stop = False
 
     def Reset(self):
@@ -121,6 +122,11 @@ class Tools:
 
     def Subscrib_State_Tirette(self, data):
         self.bStateTirette = data
+        #i = 0
+        #while self.bListStateTirette[i]:
+        #    if self.bListStateTirette[i] != True:
+        #        self.bListStateTirette[i] = data
+
 
     def Road_Creation(self):
         self.dPointdictionnary["Point0"] = Point("Point0", 1, 1, 1)
@@ -185,7 +191,7 @@ def main():
     tools = Tools()
     tools.Logs(logging.DEBUG)
     #tools.Arduino_Order = 1
-
+    time.sleep(20)
     print('=============================Fin du SETUP=============================')
     log.info('Fin du SETUP' )
 
@@ -219,7 +225,7 @@ def main():
         '''PUBLISH'''
         tools.Publish()
         time.sleep(1)
-        log.info('PUBLISH * 50')
+        log.info('PUBLISH')
 
         Current_Time = time.time()
         log.info('Time Comparaison : %s', str(Current_Time))
