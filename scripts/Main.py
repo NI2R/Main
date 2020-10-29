@@ -47,6 +47,7 @@ class Tools:
         self.bStateCote = False
         self.bStateTirette = False
         self.bStateTiretteBuffer = True
+        self.bPosition_Atteinte = False
         self.Stop = False
 
     def Reset(self):
@@ -104,6 +105,8 @@ class Tools:
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateCote), 'StateCote')
         rospy.Subscriber('StateTirette', Bool, self.Subscrib_State_Tirette) # 1 = Absente, 0 = Presente
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateTirette), 'StateTirette')
+        rospy.Subscriber('/odrivePosition_atteinte', Bool, self.Subscrib_Position_Atteinte)  # 1 = Atteinte, 0 = en cours
+        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bPosition_Atteinte), 'StateTirette')
 
     def Subscrib_Arduino_State(self, data):
         self.Arduino_State = data.data
@@ -122,6 +125,9 @@ class Tools:
 
     def Subscrib_State_Tirette(self, data):
         self.bStateTirette = data.data
+
+    def Subscrib_Position_Atteinte(self, data):
+        self.bPosition_Atteinte = data.data
 
 
 
@@ -191,7 +197,7 @@ def main():
     #tools.Arduino_Order = 1
     tools.Subscription()
     print('=============================Fin du SETUP=============================')
-    log.info('Fin du SETUP' )
+    log.info('Fin du SETUP')
 
     ''' WAITING LOOP '''
     while not(tools.bStateTirette):
@@ -221,7 +227,8 @@ def main():
 
         '''PROGRAM'''
         tools.Road_Creation()
-        tools.Next_Point()
+        if tools.bPosition_Atteinte:
+            tools.Next_Point()
 
         '''PUBLISH'''
         tools.Publish()
