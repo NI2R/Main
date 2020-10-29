@@ -85,7 +85,7 @@ class Tools:
         self.publish_order_Arduino = rospy.Publisher('arduinoOrder', Int16, queue_size=10)  # 0=rien 1=init ... 8=Drapeau
         self.publish_order_Arduino.publish(self.Arduino_Order)
         self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.Arduino_Order), 'arduinoOrder')
-        self.publish_goal_point = rospy.Publisher('goal_point', Pose2D, queue_size=10)
+        self.publish_goal_point = rospy.Publisher('goal_point', Pose2D, queue_size=200)
         self.publish_goal_point.publish(self.cgoal.Pose2D)
         print('publication de cgoal.Pose2D.x =', self.cgoal.Pose2D.x)
         print('publication de cgoal.Pose2D.y =', self.cgoal.Pose2D.y)
@@ -226,9 +226,9 @@ def main():
         tools.Next_Point()
 
         '''PUBLISH'''
-        for i in range(1, 10):
+        for i in range(1, 50):
             tools.Publish()
-        log.info('PUBLISH * 10')
+        log.info('PUBLISH * 50')
 
         Current_Time = time.time()
         log.info('Time Comparaison : %s', str(Current_Time))
