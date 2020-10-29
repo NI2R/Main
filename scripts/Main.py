@@ -230,6 +230,7 @@ def main():
             '''PUBLISH'''
             for i in range(0, 10):
                 tools.Publish()
+                rospy.sleep(0.2)
             tools.bEnableCompute = False
             print('Main : Published')
             time.sleep(1)
