@@ -218,6 +218,7 @@ def main():
     log.info('SUBSCRIPTION')
 
     ''' == PROGRAM LOOP == '''
+    tools.Road_Creation()
     tools.Next_Point()
     while not(rospy.is_shutdown()):
         log.info('Inside PROGRAM LOOP')
@@ -227,7 +228,6 @@ def main():
         #log.info('SUBSCRIPTION')
 
         '''PROGRAM'''
-        tools.Road_Creation()
         if tools.bPosition_Atteinte:
             tools.Next_Point()
 
