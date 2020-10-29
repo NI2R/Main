@@ -47,8 +47,10 @@ class Tools:
         self.bStateCote = False
         self.bStateTirette = False
         self.bStateTiretteBuffer = True
-        self.bPosition_Atteinte = False
+        self.bPosition_Atteinte = True
         self.Stop = False
+        self.bEnableMove = False
+        self.bEnableCompute = False
 
     def Reset(self):
         self.cgoal.x = 0
@@ -70,10 +72,6 @@ class Tools:
     def Next_Point(self):
         if self.nbActual_Point < self.nPoint:
             self.nbActual_Point += 1
-            self.log.info('le point actuel est %s', str(self.nbActual_Point))
-        else:
-            self.log.error('le point actuel est %s et souhaite etre incrementï¿½', str(self.nbActual_Point))
-        self.cgoal.Get_Coordonnes(self.dPointdictionnary["Point"+str(self.nbActual_Point)])
 
     def Logs(self, loglevel):
         self.log.basicConfig(filename='main.log', format='%(asctime)s %(levelname)s:%(message)s', level=loglevel)
@@ -84,25 +82,24 @@ class Tools:
         self.publish_order_Arduino = rospy.Publisher('arduinoOrder', Int16, queue_size=10)  # 0=rien 1=init ... 8=Drapeau
         self.publish_order_Arduino.publish(self.Arduino_Order)
         self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.Arduino_Order), 'arduinoOrder')
+
         self.publish_goal_point = rospy.Publisher('goal_point', Pose2D, queue_size=200)
         self.publish_goal_point.publish(self.cgoal.Pose2D)
         self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.cgoal.Pose2D), 'goal_point')
+
         self.publish_stop = rospy.Publisher('Stop_time', Bool, queue_size=10)
         self.publish_stop.publish(self.Stop)
         self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.Stop), 'Stop')
 
+        self.publish_stop = rospy.Publisher('/odriveEnableCompute', Bool, queue_size=10)
+        self.publish_stop.publish(self.bEnableCompute)
+        self.log.info("la valeur %s, a ete publiee dans le topic %s", str(self.bEnableCompute), '/odriveEnableCompute')
 
     def Subscription(self):
         rospy.Subscriber('/arduinoState', Int16, self.Subscrib_Arduino_State)
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Arduino_State), '/arduinoState')
-        rospy.Subscriber('CodeAruco', String, self.Subscrib_Code_Aruco)
-        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Code_Aruco), 'Code_Aruco')
         rospy.Subscriber('Arrive', Bool, self.Subscrib_Arrive) # 0 = Pas Arrivé / 1 = Arrivé
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Arrive), 'Arrive')
-        rospy.Subscriber('StateClef', Bool, self.Subscrib_State_Clef) # 1 = Debug, 0 = Normal
-        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateClef), 'StateClef')
-        rospy.Subscriber('StateCote', Bool, self.Subscrib_State_Cote) # 1 = Jaune, 0 = Bleu
-        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateCote), 'StateCote')
         rospy.Subscriber('StateTirette', Bool, self.Subscrib_State_Tirette) # 1 = Absente, 0 = Presente
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateTirette), 'StateTirette')
         rospy.Subscriber('/odrivePosition_atteinte', Bool, self.Subscrib_Position_Atteinte)  # 1 = Atteinte, 0 = en cours
@@ -190,38 +187,32 @@ def main():
 
     ''' == SETUP == '''
 
-    log = logging
-    Logs(log, log.DEBUG)
     tools = Tools()
-    tools.Logs(logging.DEBUG)
-    #tools.Arduino_Order = 1
     tools.Subscription()
-    log.info('Fin du SETUP')
+    Liste_Points = []
+    Liste_Points.append(Pose2D(x=500, y=0, theta=0))
+    Liste_Points.append(Pose2D(x=1500, y=0, theta=0))
+    Liste_Points.append(Pose2D(x=1500, y=1500, theta=0))
+
     print('=============================Fin du SETUP=============================')
+
+    ''' END SETUP'''
 
     ''' WAITING LOOP '''
     while not(tools.bStateTirette):
         print('En attente de la tirette : etat = %s', str(tools.bStateTirette))
-        log.info('En attente de la tirette : etat = %s', str(tools.bStateTirette))
         rospy.sleep(0.5)
+    print('tirette Absente')
     ''' WAITING LOOP END '''
 
-    print('tirette Absente')
-    log.info('tirette arrachee')
-    Start_Time = time.time()
-    tools.Switch_Side(tools.bStateCote)
-    tools.Arduino_Order = 0
-    ''' == SETUP END == '''
 
     '''SUBSCRIPTION'''
     tools.Subscription()
-    log.info('SUBSCRIPTION')
 
     ''' == PROGRAM LOOP == '''
-    tools.Road_Creation()
-    tools.Next_Point() #Initialisation du mouvement
+
+
     while not(rospy.is_shutdown()):
-        log.info('Inside PROGRAM LOOP')
 
         #'''SUBSCRIPTION'''
         #tools.Subscription()
@@ -230,22 +221,15 @@ def main():
         '''PROGRAM'''
         if tools.bPosition_Atteinte:
             tools.Next_Point()
+            tools.cgoal.Pose2D = Liste_Points[tools.nbActual_Point]
+            tools.bEnableCompute = True
             #inserer les actions ici + publish
 
-        '''PUBLISH'''
-        tools.Publish()
-        time.sleep(1)
-        log.info('PUBLISH')
-
-        Current_Time = time.time()
-        log.info('Time Comparaison : %s', str(Current_Time))
-        if Current_Time - Start_Time >= 95:
-            tools.Stop = True
-            tools.Reset()
-            tools.Arduino_Order = 8
-            while not(rospy.is_shutdown()):
+            '''PUBLISH'''
+            for i in range(0, 10):
                 tools.Publish()
-            break
+            tools.bEnableCompute = False
+            time.sleep(1)
 
     ''' == LOOP-END == '''
 
