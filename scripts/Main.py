@@ -97,7 +97,7 @@ class Tools:
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Arduino_State), '/arduinoState')
         rospy.Subscriber('CodeAruco', String, self.Subscrib_Code_Aruco)
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Code_Aruco), 'Code_Aruco')
-        rospy.Subscriber('Arrive', Bool, self.Subscrib_Arrive)
+        rospy.Subscriber('Arrive', Bool, self.Subscrib_Arrive) # 0 = Pas Arrivé / 1 = Arrivé
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.Subscrib_Arrive), 'Arrive')
         rospy.Subscriber('StateClef', Bool, self.Subscrib_State_Clef) # 1 = Debug, 0 = Normal
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateClef), 'StateClef')
@@ -106,7 +106,7 @@ class Tools:
         rospy.Subscriber('StateTirette', Bool, self.Subscrib_State_Tirette) # 1 = Absente, 0 = Presente
         self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bStateTirette), 'StateTirette')
         rospy.Subscriber('/odrivePosition_atteinte', Bool, self.Subscrib_Position_Atteinte)  # 1 = Atteinte, 0 = en cours
-        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bPosition_Atteinte), 'StateTirette')
+        self.log.debug("la valeur %s, a ete recuperee du topic %s", str(self.bPosition_Atteinte), '/odrivePosition_atteinte')
 
     def Subscrib_Arduino_State(self, data):
         self.Arduino_State = data.data
@@ -196,8 +196,8 @@ def main():
     tools.Logs(logging.DEBUG)
     #tools.Arduino_Order = 1
     tools.Subscription()
-    print('=============================Fin du SETUP=============================')
     log.info('Fin du SETUP')
+    print('=============================Fin du SETUP=============================')
 
     ''' WAITING LOOP '''
     while not(tools.bStateTirette):
@@ -207,7 +207,7 @@ def main():
     ''' WAITING LOOP END '''
 
     print('tirette Absente')
-    #log.info('tirette arrachee')
+    log.info('tirette arrachee')
     Start_Time = time.time()
     tools.Switch_Side(tools.bStateCote)
     tools.Arduino_Order = 0
@@ -219,7 +219,7 @@ def main():
 
     ''' == PROGRAM LOOP == '''
     tools.Road_Creation()
-    tools.Next_Point()
+    tools.Next_Point() #Initialisation du mouvement
     while not(rospy.is_shutdown()):
         log.info('Inside PROGRAM LOOP')
 
@@ -228,7 +228,7 @@ def main():
         #log.info('SUBSCRIPTION')
 
         '''PROGRAM'''
-        if tools.bPosition_Atteinte:
+        if tools.bArrive:
             tools.Next_Point()
 
         '''PUBLISH'''
