@@ -184,10 +184,7 @@ def main():
     Logs(log, log.DEBUG)
     tools = Tools()
     tools.Logs(logging.DEBUG)
-    tools.Arduino_Order = 1
-    for i in range(1, 10):
-        tools.Publish()
-        rospy.sleep(0.1)
+    #tools.Arduino_Order = 1
 
     print('=============================Fin du SETUP=============================')
     log.info('Fin du SETUP' )
