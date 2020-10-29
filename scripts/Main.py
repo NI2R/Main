@@ -30,7 +30,7 @@ class Point:
 
 class Tools:
     def __init__(self):
-        self.nPoint = 3
+        self.nPoint = 2
         self.nbActual_Point = 0
         self.dPointdictionnary = {}
         self.log = logging
@@ -220,6 +220,7 @@ def main():
 
         '''PROGRAM'''
         if tools.bPosition_Atteinte:
+            tools.bPosition_Atteinte = False
             tools.Next_Point()
             tools.cgoal.Pose2D = Liste_Points[tools.nbActual_Point]
             tools.bEnableCompute = True
